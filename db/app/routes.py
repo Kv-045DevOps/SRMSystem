@@ -4,11 +4,12 @@ from flask import Flask, jsonify, request
 import json
 import requests
 
+connect = dbconnect.connect_db("srmsystem")
+cursor = connect.cursor()
+
 @app.route('/get-dep', methods=['GET'])
 def get_dep():
     data = {"Department":[]}
-    connect = dbconnect.connect_db("srmsystem")
-    cursor = connect.cursor()
     cursor.execute('SELECT * FROM department')
     records = cursor.fetchall()
     for i in records:
@@ -20,8 +21,6 @@ def get_dep():
 @app.route('/get-team', methods=['GET'])
 def get_team():
     data = {"Team":[]}
-    connect = dbconnect.connect_db("srmsystem")
-    cursor = connect.cursor()
     cursor.execute('SELECT * FROM team')
     records = cursor.fetchall()
     for i in records:
@@ -32,8 +31,6 @@ def get_team():
 @app.route('/get-empl', methods=['GET'])
 def get_empl():
     data = {"Employee":[]}
-    connect = dbconnect.connect_db("srmsystem")
-    cursor = connect.cursor()
     cursor.execute('SELECT * FROM employee')
     records = cursor.fetchall()
     for i in records:
@@ -45,8 +42,6 @@ def get_empl():
 def set_department():
     datajson = request.data
     data = json.loads(datajson)
-    connect = dbconnect.connect_db("srmsystem")
-    cursor = connect.cursor()
     cursor.execute("INSERT INTO department (name) VALUES ('"+data['name']+"')")
     connect.commit()
     return ""
@@ -55,8 +50,6 @@ def set_department():
 def set_team():
     datajson = request.data
     data = json.loads(datajson)
-    connect = dbconnect.connect_db("srmsystem")
-    cursor = connect.cursor()
     if data['manager_id'] == "": cursor.execute("INSERT INTO team (name, id_department) VALUES ('"+data['name']+"', '"+data['depart_id']+"')")
     else: cursor.execute("INSERT INTO team (name, id_manager, id_department) VALUES ('"+data['name']+"', '"+data['manager_id']+"', '"+data['depart_id']+"')")
     connect.commit()
@@ -65,8 +58,6 @@ def set_team():
 def set_employee():
     datajson = request.data
     data = json.loads(datajson)
-    connect = dbconnect.connect_db("srmsystem")
-    cursor = connect.cursor()
     cursor.execute("INSERT INTO employee (fname, sname, exp, position, salary, coef, team_id) VALUES ('"+data['name']+"', '"+data['sname']+"', '"+data['exp']+"', '"+data['position']+"', '"+data['salary']+"', '"+data['coefficient']+"', '"+data['team_id']+"')")
     connect.commit()
     return ""
