@@ -6,6 +6,8 @@ from requests import post
 import json
 import os
 
+url = "test"
+
 @app.route('/posting', methods=['POST'])
 def posting():
 
