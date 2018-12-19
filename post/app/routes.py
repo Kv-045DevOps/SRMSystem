@@ -4,18 +4,19 @@ from flask import Flask, jsonify, request
 import requests
 from requests import post
 import json
+import os
 
 @app.route('/posting', methods=['POST'])
 def posting():
 
     def send_json1(sendjson1):
-        sendjson1 = post("http://127.0.0.1:5002/set_department", json=sendjson1, headers={"Content-type": "application/json"})
+        sendjson1 = post("http://"+str(os.getenv("DB_URL"))+":5002/set_department", json=sendjson1, headers={"Content-type": "application/json"})
         print(sendjson1.text)
     def send_json2(sendjson2):
-        sendjson2 = post("http://127.0.0.1:5002/set_team", json=sendjson2, headers={"Content-type": "application/json"})
+        sendjson2 = post("http://"+str(os.getenv("DB_URL"))+":5002/set_team", json=sendjson2, headers={"Content-type": "application/json"})
         print(sendjson2.text)
     def send_json3(sendjson3):
-        sendjson3 = post("http://127.0.0.1:5002/set_employee", json=sendjson3, headers={"Content-type": "application/json"})
+        sendjson3 = post("http://"+str(os.getenv("DB_URL"))+":5002/set_employee", json=sendjson3, headers={"Content-type": "application/json"})
         print(sendjson3.text)
 
     datajson = request.data
