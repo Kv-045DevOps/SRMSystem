@@ -1,14 +1,23 @@
-from app import app
+from flask import Flask
 import flask
 import json
 import requests
+import os
+
+app = Flask(__name__)
 
 
-URL_DEP = 'http://127.0.0.1:5002/get-dep'
-URL_EMPL = 'http://127.0.0.1:5002/get-empl'
-URL_TEAM = 'http://127.0.0.1:5002/get-team'
-URL_ALL = 'http://127.0.0.1:5002/get-info'
 
+URL_DEP = str(os.getenv("URL_DB")) + 'get-dep'
+URL_EMPL = str(os.getenv("URL_DB")) + 'get-empl'
+URL_TEAM = str(os.getenv("URL_DB")) + 'get-team'
+URL_ALL = str(os.getenv("URL_DB")) + 'get-info'
+
+def print_url():
+    print(URL_DEP)
+    print(URL_TEAM)
+    print(URL_EMPL)
+    
 
 def get_dep():
     r = requests.get(URL_DEP)
@@ -42,7 +51,7 @@ def parse_json(arg1, arg2, arg3):
 
 def salary_employee(dict_emp):
     for i in dict_emp['Employee']:
-        if i['exp'] > 2 and i['exp'] < 5:
+        if int(i['exp']) > 2 and int(i['exp']) < 5:
             i['salary'] = int(int(i['salary']) + 200)
         elif i['exp'] > 5:
             i['salary'] = int(int(i['salary'])*1.2 +  500)
@@ -89,8 +98,11 @@ def salary_designer(dict_emp):
 
 @app.route('/get', methods=['GET'])
 def get_info():
-    req = requests.get(URL_ALL)
-    return json.dumps(req)
+    print_url()
+    #print("GOOOOOD")
+    #req = requests.get(URL_ALL)
+    #return json.dumps(req)
+    return URL_DEP + "!!!!!!!!!"
 
 @app.route('/get-one', methods=['GET'])
 def get_one():
@@ -106,3 +118,8 @@ def get_one():
     res = parse_json(dep, team, emp)
     #res = {'name':'text'}
     return res
+
+
+if __name__ == '__main__':
+    app.run(debug=True,host='0.0.0.0',port='5003')
+
